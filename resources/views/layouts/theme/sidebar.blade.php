@@ -124,6 +124,12 @@
             </a>
         </li>
 
+        <li class="">
+            <a href="{{ url('reportCustomer') }}" data-active="false">
+                <i class="zmdi zmdi-assignment"></i> <span>Reportes Clientes</span>
+            </a>
+        </li>
+
     </ul>
 
 </div>
