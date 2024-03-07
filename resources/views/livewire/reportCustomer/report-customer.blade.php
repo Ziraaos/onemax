@@ -75,20 +75,24 @@
             {{ $customers->links() }}
         </div>
     </div>
-    @include('livewire.customer.form')
+    @include('livewire.reportCustomer.detail')
 </div>
 
-{{-- <script>
+<script>
     document.addEventListener('DOMContentLoaded', function() {
-        window.livewire.on('customer-added', msg => {
+        window.livewire.on('payment-added', msg => {
             $('#theModal').modal('hide');
             noty(msg)
         });
-        window.livewire.on('customer-updated', msg => {
+        window.livewire.on('payment-not-added', msg => {
             $('#theModal').modal('hide');
             noty(msg)
         });
-        window.livewire.on('customer-deleted', msg => {
+        window.livewire.on('payment-updated', msg => {
+            $('#theModal').modal('hide');
+            noty(msg)
+        });
+        window.livewire.on('payment-deleted', msg => {
             noty(msg)
         });
         window.livewire.on('hide-modal', msg => {
@@ -100,6 +104,16 @@
         window.livewire.on('hidden.bs.modal', msg => {
             $('.er').css('display', 'none');
         });
+
+        function resetInputFile() {
+            $('input[type=file]').val('');
+        }
+
+        //eventos
+        window.livewire.on('show-modal-detail', Msg => {
+            $('#modalDetails').modal('show')
+        })
+        
     });
 
     function resetInputFile() {
@@ -127,7 +141,7 @@
             }
         })
     }
-</script> --}}
+</script>
 
 
 <script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAP_KEY') }}&callback=iniciarMapa" async defer>

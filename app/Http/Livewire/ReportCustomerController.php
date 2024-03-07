@@ -5,6 +5,8 @@ namespace App\Http\Livewire;
 use App\Models\Customer;
 use App\Models\Location;
 use App\Models\Service;
+use App\Models\PaymentDetail;
+use App\Models\PaymentMethod;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -12,12 +14,13 @@ class ReportCustomerController extends Component
 {
     use WithPagination;
     
-    public $search, $selected_id;
+    public $search, $selected_id, $paymentDetails;
     private $pagination = 5;
     protected $paginationTheme = 'bootstrap';
 
     public function mount()
     {
+        $this->paymentDetails = [];
         $this->pageTitle = 'Listado';
         $this->componentName = 'Clientes';
         $this->locationid = 'Elegir';
@@ -48,7 +51,8 @@ class ReportCustomerController extends Component
         return view('livewire.reportCustomer.report-customer', [
             'customers' => $data,
             'locations' => Location::orderBy('name', 'asc')->get(),
-            'services' => Service::orderBy('name', 'asc')->get()])
+            'services' => Service::orderBy('name', 'asc')->get(),
+            /* 'methods' => PaymentMethod::orderBy('name', 'asc')->get() */])
             ->extends('layouts.theme.app')
             ->section('content');
     }
@@ -67,11 +71,11 @@ class ReportCustomerController extends Component
                 'payments.status'
             )
             ->get();
-
+        
         $this->paymentDetails = PaymentDetail::with('paymentMethod')
             ->where('customer_id', $customerId)
             ->get();
-
+        
         $this->namec = $customer->first_name . ' ' . $customer->last_name;
         $this->localidad = $customer->location->name;
         $suma = $this->details->sum(function ($item) {
@@ -80,7 +84,7 @@ class ReportCustomerController extends Component
 
         $this->sumDetails = $suma;
         /* $this->customerId = $customerId; */
-
+        /* dd($this->details,$this->paymentDetails,$this->sumDetails); */
         $this->emit('show-modal-detail', 'details loaded');
     }
 }
