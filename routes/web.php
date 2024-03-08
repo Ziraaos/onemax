@@ -82,7 +82,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('reportService/pdf/{location}/{type}', [ExportController::class, 'reportServicePDF']);
 
     //reportes clientes
-    Route::get('reportService/pdf/{location}/{type}', [ExportController::class, 'reportServicePDF']);
+    Route::get('reportCustomer/pdf/{namec}/{cid}/{location}', [ExportController::class, 'reportCustomerPDF']);
 
     //reportes Excel
     Route::get('report/excel/{user}/{type}/{f1}/{f2}', [ExportController::class, 'reporteExcel']);

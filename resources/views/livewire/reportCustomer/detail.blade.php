@@ -107,7 +107,8 @@
                                             <img src="{{ asset('storage/payments/' . $p->image) }}" height="70"
                                                 width="80" class="rounded" alt="no-image">
                                         </span>
-                                        <a href="{{ asset('storage/payments/' . $p->image) }}" data-lightbox="roadtrip">Ver</a>
+                                        <a href="{{ asset('storage/payments/' . $p->image) }}"
+                                            data-lightbox="roadtrip">Ver</a>
                                     </td>
                                 </tr>
                             @endforeach
@@ -127,7 +128,11 @@
                     </table>
                 </div>
             </div>
+
             <div class="modal-footer bg-primary bg-gradient">
+                <a class="btn btn-dark btn-block {{ count($details) < 1 ? 'disabled' : '' }}"
+                    href="{{ url('reportCustomer/pdf' . '/' . $namec . '/' . $cid . '/' . $localidad) }}" target="_blank">Generar
+                    PDF</a>
                 <button type="button" class="btn btn-dark close-btn text-info" data-dismiss="modal">CERRAR</button>
             </div>
         </div>

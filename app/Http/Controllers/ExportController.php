@@ -7,6 +7,8 @@ use App\Models\Location;
 use App\Models\Sale;
 use App\Models\SaleDetail;
 use App\Models\User;
+use App\Models\Customer;
+use App\Models\PaymentDetail;
 use Barryvdh\DomPDF\Facade\PDF;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -197,6 +199,57 @@ class ExportController extends Controller
 
     }
 
+    public function reportCustomerPDF($namec, $cid, $location)
+    {
+        $data = [];
+        Carbon::setLocale('es');
+
+        /* dd($namec, $cid, $location); */
+        $customer = Customer::find($cid);
+        $this->cid = $cid;
+        $data = Customer::join('locations', 'customers.location_id', '=', 'locations.id')
+            ->join('payments', 'customers.id', '=', 'payments.customer_id')
+            ->where('customers.id', $cid)
+            ->select(
+                'locations.name as location_name',
+                'payments.date_serv',
+                'payments.total',
+                'payments.debt',
+                'payments.status'
+            )
+            ->get();
+        
+        $this->paymentDetails = PaymentDetail::with('paymentMethod')
+            ->where('customer_id', $cid)
+            ->get();
+        
+        $this->namec = $customer->first_name . ' ' . $customer->last_name;
+        $this->localidad = $customer->location->name;
+        $suma = $data->sum(function ($item) {
+            return $item->total;
+        });
+
+        $this->sumDetails = $suma;
+        /* dd($data, $namec, $location, $suma, $this->paymentDetails); */
+        /* $user = $userId == 0 ? 'Todos' : User::find($userId)->name; */
+        $pdf = PDF::loadView('pdf.reporteCustomer', compact('data', 'namec', 'location', 'suma'));
+
+        /*
+        $pdf = new DOMPDF();
+        $pdf->setBasePath(realpath(APPLICATION_PATH . '/css/'));
+        $pdf->loadHtml($html);
+        $pdf->render();
+        */
+        /*
+        $pdf->set_protocol(WWW_ROOT);
+        $pdf->set_base_path('/');
+        */
+
+        return $pdf->stream('customerReport.pdf'); // visualizar
+        //$customReportName = 'salesReport_'.Carbon::now()->format('Y-m-d').'.pdf';
+        //return $pdf->download($customReportName); //descargar
+
+    }
 
     public function reporteExcel($userId, $reportType, $dateFrom = null, $dateTo = null)
     {

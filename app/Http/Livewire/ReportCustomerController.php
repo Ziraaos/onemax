@@ -14,13 +14,14 @@ class ReportCustomerController extends Component
 {
     use WithPagination;
     
-    public $search, $selected_id, $paymentDetails;
-    private $pagination = 5;
+    public $search, $selected_id, $paymentDetails, $namec, $localidad, $details, $sumDetails, $cid;
+    private $pagination = 15;
     protected $paginationTheme = 'bootstrap';
 
     public function mount()
     {
         $this->paymentDetails = [];
+        $this->details = [];
         $this->pageTitle = 'Listado';
         $this->componentName = 'Clientes';
         $this->locationid = 'Elegir';
@@ -60,6 +61,7 @@ class ReportCustomerController extends Component
     public function getDetails($customerId)
     {
         $customer = Customer::find($customerId);
+        $this->cid = $customerId;
         $this->details = Customer::join('locations', 'customers.location_id', '=', 'locations.id')
             ->join('payments', 'customers.id', '=', 'payments.customer_id')
             ->where('customers.id', $customerId)
